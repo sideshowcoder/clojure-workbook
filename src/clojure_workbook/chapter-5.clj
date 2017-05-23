@@ -1,4 +1,5 @@
-(ns clojure-workbook.chapter-5)
+(ns clojure-workbook.chapter-5
+  (:gen-class))
 
 (def character
   {:name "Phil"
