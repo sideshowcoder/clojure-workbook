@@ -76,3 +76,35 @@
 (when-valid {:name "" :email "foobar"} order-details-validations
             (println :succes)
             1)
+
+
+(defmacro my-or
+  ([] nil)
+  ([x] x)
+  ([x & xs]
+   `(let [or# ~x]
+      (if or# or# (or ~@xs)))))
+
+
+(my-or)
+(my-or false)
+(my-or true true)
+(my-or true false)
+(my-or true false false)
+(my-or false false true)
+(my-or (= 1 2) (= 2 1) (= 1 1))
+(my-or (println 1) true (println 2))
+
+(defmacro defattrs
+  [& attrs]
+  (map (fn [[attr-reader attr]] `(defn ~attr-reader [record#] (~attr record#)))
+       (partition 2 attrs)))
+
+
+(defattrs
+  c-int :intelligence
+  c-str :strength)
+
+
+(c-int {:intelligence 1})
+(c-str {:strength 1})
