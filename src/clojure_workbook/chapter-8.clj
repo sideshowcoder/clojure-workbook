@@ -96,15 +96,19 @@
 (my-or (println 1) true (println 2))
 
 (defmacro defattrs
-  [& attrs]
-  (map (fn [[attr-reader attr]] `(defn ~attr-reader [record#] (~attr record#)))
-       (partition 2 attrs)))
-
+  ([name attr]
+   `(defn ~name [record#] (~attr record#)))
+  ([name attr & rest]
+   `(do (defattrs ~name ~attr)
+        (defattrs ~@rest))))
 
 (defattrs
   c-int :intelligence
-  c-str :strength)
-
+  c-str :strength
+  c-foo :foo
+  c-bar :bar)
 
 (c-int {:intelligence 1})
 (c-str {:strength 1})
+(c-foo {:foo 12})
+(c-bar {:bar 13})
