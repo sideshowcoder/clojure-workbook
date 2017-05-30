@@ -96,11 +96,11 @@
 (my-or (println 1) true (println 2))
 
 (defmacro defattrs
-  ([name attr]
-   `(defn ~name [record#] (~attr record#)))
-  ([name attr & rest]
-   `(do (defattrs ~name ~attr)
-        (defattrs ~@rest))))
+  [& attrs]
+  (let [name-attr-pairs (partition 2 attrs)]
+    `(do
+       ~@(map (fn [[name attr]] `(defn ~name [record#] (~attr record#)))
+              name-attr-pairs))))
 
 (defattrs
   c-int :intelligence
