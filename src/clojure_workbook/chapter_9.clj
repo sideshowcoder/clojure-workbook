@@ -1,4 +1,5 @@
 (ns clojure-workbook.chapter-9
+  (:gen-class)
   (:require [net.cgrand.enlive-html :as html]))
 
 (defn extract-results-bing
@@ -27,3 +28,4 @@
   [engines s]
   (let [[engine result] (http-query engines s)]
     ((get-in search-engines [engine :extract-results]) result)))
+
