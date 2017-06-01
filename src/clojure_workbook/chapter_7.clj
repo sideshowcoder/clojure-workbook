@@ -1,5 +1,4 @@
-(ns clojure-workbook.chapter-7
-  (:gen-class))
+(ns clojure-workbook.chapter-7)
 
 (eval
  (let [name-and-movie (read-string "(phil alien)")]
