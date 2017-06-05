@@ -36,6 +36,9 @@
 (defn process-quotes
   [f count]
   (let [quote-promises (map (fn [_] (get-quote-promise)) (range count))]
+    ;; parallelizing here is probably not very useful actually as aggregating
+    ;; such a small amount of data in a reduce is almost instant this means the
+    ;; overhead of pmap is dominating
     (pmap (fn [quote-promise] (f @quote-promise)) quote-promises)))
 
 
