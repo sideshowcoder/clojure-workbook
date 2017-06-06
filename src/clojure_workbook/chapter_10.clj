@@ -6,20 +6,19 @@
     (swap! a inc))
   @a)
 
+(def quote-url "http://www.braveclojure.com/random-quote")
 
-(defn get-quote-promise
-  []
-  (let [quote-promise (promise)]
-    (future (deliver quote-promise (slurp "http://www.braveclojure.com/random-quote")))
-    quote-promise))
+(defn normalized-words
+  [sentence]
+  (->> (str/split sentence #" ")
+       (map #(str/replace %1 #"\.|\?|!|--" ""))
+       (map str/trim)
+       (filter not-empty)
+       (map str/lower-case)))
 
 (defn word-count
   [s]
-  (let [words (->> (str/split s #" ")
-                   (map #(str/replace %1 #"\.|\?|!|--" ""))
-                   (map str/trim)
-                   (filter not-empty)
-                   (map str/lower-case))]
+  (let [words (normalized-words s)]
     (reduce-kv #(assoc %1 %2 (count %3)) {}
                (group-by identity words))))
 
@@ -31,21 +30,12 @@
    nil
    count-map))
 
-(aggregate-word-count (word-count "foo foo bar") word-counter)
-
-(defn process-quotes
-  [f count]
-  (let [quote-promises (map (fn [_] (get-quote-promise)) (range count))]
-    ;; parallelizing here is probably not very useful actually as aggregating
-    ;; such a small amount of data in a reduce is almost instant this means the
-    ;; overhead of pmap is dominating
-    (pmap (fn [quote-promise] (f @quote-promise)) quote-promises)))
-
-
 (defn quote-word-count
   [n]
-  (let [counter (atom {})]
-    (doall (process-quotes (fn [quote] (aggregate-word-count (word-count quote) counter)) n))
-    @counter))
+  (let [urls (replicate n quote-url)
+        count (atom {})]
+    (last (pmap
+           (fn [url] (aggregate-word-count (word-count (slurp url)) count))
+           urls))))
 
 (time (quote-word-count 100))
