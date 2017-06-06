@@ -39,3 +39,23 @@
            urls))))
 
 (time (quote-word-count 100))
+
+
+;; Model transaction between characters, applying a potion to another character
+(def warrior (ref {:name "Gimli"
+                   :current-health 15
+                   :max-health 40}))
+
+(def healer (ref {:name "Karl"
+                  :inventory #{{:name "potion" :hp 10}}}))
+
+
+(defn heal
+  [healer character]
+  (dosync
+   (when-let [potion (some #(if (= (:name %) "potion") %) (:inventory @healer))]
+     (alter healer update-in [:inventory] disj potion)
+     (alter character update-in [:current-health] #(+ % (:hp potion))))))
+
+
+(heal healer warrior)
