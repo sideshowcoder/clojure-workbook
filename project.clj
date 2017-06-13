@@ -5,4 +5,5 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main clojure-workbook.runner
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [enlive "1.1.6"]])
+                 [enlive "1.1.6"]
+                 [org.clojure/core.async "0.3.443"]])
