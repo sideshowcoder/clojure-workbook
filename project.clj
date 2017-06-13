@@ -1,6 +1,6 @@
 (defproject clojure-workbook "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
+  :description "Excercises from http://www.braveclojure.com"
+  :url "https://github.com/sideshowcoder/clojure-workbook"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :main clojure-workbook.runner
