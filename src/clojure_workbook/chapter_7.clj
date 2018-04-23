@@ -6,13 +6,6 @@
 
 (def operators '(+ - * /))
 
-(def infix-operator-transforms
-  (apply comp (map #(partial transform-operator %) operators)))
-
-(defn infix-transform
-  [infix-ops]
-  (first (infix-operator-transforms infix-ops)))
-
 (defn transform-operator
   [operator operations]
   (loop [[op1 op2 & ops] operations
@@ -21,6 +14,13 @@
       (nil? op1) (reverse res)
       (= op1 operator) (let [[hd & tl] res] (recur ops (cons (list operator hd op2) tl)))
       :else (recur (cons op2 ops) (cons op1 res)))))
+
+(def infix-operator-transforms
+  (apply comp (map #(partial transform-operator %) operators)))
+
+(defn infix-transform
+  [infix-ops]
+  (first (infix-operator-transforms infix-ops)))
 
 (defn infix-eval
   [infix-ops]
